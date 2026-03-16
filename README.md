@@ -43,7 +43,67 @@ We use this categorical data encoding technique when the features are nominal(do
 • Yeojohnson method
 
 # CODING AND OUTPUT:
+```
+   import pandas as pd
+  import numpy as np
+  from sklearn.preprocessing import LabelEncoder, StandardScaler, PowerTransformer
+  from scipy.stats import boxcox
+  data = pd.read_csv('Data_to_Transform.csv')
+  print("Original Dataset:")
+  print(data.head())
+  data.fillna(data.mean(numeric_only=True), inplace=True)
+  print("\nDataset after handling missing values:")
+  print(data.head())
 
-# RESULT:
+  numeric_column = data.select_dtypes(include=np.number).columns[0]
+  print(f"\nColumn Selected for Transformation: {numeric_column}")
 
+  positive_data = data[data[numeric_column] > 0].copy()
+   print(f"\nNumber of positive values in '{numeric_column}': {len(positive_data)}")
+
+  positive_data['Log_Transform'] = np.log(positive_data[numeric_column])
+  print("\nDataset after Log Transformation:")
+  print(positive_data[['Log_Transform']].head())
+  
+  positive_data['Reciprocal_Transform'] = 1 / positive_data[numeric_column]
+  print(positive_data[['Reciprocal_Transform']].head())
+
+  positive_data['Sqrt_Transform'] = np.sqrt(positive_data[numeric_column])
+   print("Square Root Transformed Data:")
+  print(positive_data[['Sqrt_Transform']].head())
+
+  positive_data['Square_Transform'] = np.square(positive_data[numeric_column])
+  print("Square Transformed Data:")
+  print(positive_data[['Square_Transform']].head())
+
+  positive_data['BoxCox_Transform'], lambda_value = boxcox(positive_data[numeric_column])
+  print(f"\nBox-Cox Lambda Value: {lambda_value}")
+  
+  pt = PowerTransformer(method='yeo-johnson')
+  data['YeoJohnson_Transform'] = pt.fit_transform(data[[numeric_column]])
+  print("Yeo-Johnson Transformed Data:")
+
+  print(data[['YeoJohnson_Transform']].head())
+  scaler = StandardScaler()
+  data['Standard_Scaled'] = scaler.fit_transform(data[[numeric_column]])
+  print("\nStandard Scaled Data:")
+  print(data[['Standard_Scaled']].head())
+
+  positive_data.to_csv('Transformed_Positive_Data.csv', index=False)
+  data.to_csv('Transformed_Full_Data.csv', index=False)
+  print("\nTransformed datasets have been saved as 'Transformed_Positive_Data.csv' and 'Transformed_Full_Data.csv'.")
+  print("\nTransformation Completed Successfully.")
+  print("\nTransformed Dataset Preview:")
+  print(positive_data.head())
+
+```
+<img width="825" height="378" alt="Screenshot 2026-03-16 212317" src="https://github.com/user-attachments/assets/46df4c59-9f69-45d3-a37d-5e604881bc82" />
+<img width="822" height="348" alt="Screenshot 2026-03-16 212328" src="https://github.com/user-attachments/assets/3d0d818e-f7e7-4015-8502-44d333a05885" />
+<img width="701" height="263" alt="Screenshot 2026-03-16 212338" src="https://github.com/user-attachments/assets/00af668f-12be-4337-848b-b040ce4701ca" />
+<img width="457" height="201" alt="Screenshot 2026-03-16 212348" src="https://github.com/user-attachments/assets/bf82a434-aefb-4927-9217-a7477df4688d" />
+# PDF FILE:
+[vertopal.com_DS EXP 3.pdf](https://github.com/user-attachments/files/26029843/vertopal.com_DS.EXP.3.pdf)
+
+# Result:
+successfully performed Feature Encoding and Transformation process and saved the data to a file.
        
